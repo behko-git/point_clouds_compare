@@ -232,4 +232,4 @@ if __name__ == '__main__':
     dem = Dem(r'F:\Data\DEM_map\DemMap_47_part1.tif')
     cloud = Cloud(r'F:\Data\DEM_map\cloud_1.ply')
     compare = Compare(dem, cloud)
-    compare.plot_bound(fovx=69, fovy=39)
+    compare.plot_bound(fovx=69, fovy=39, sensor_data=None)
