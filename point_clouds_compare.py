@@ -175,7 +175,7 @@ class Compare:
 
         return points
 
-    def plot_bound(self, fovx, fovy, sensor_data=None, meshroom=False):
+        def plot_bound(self, fovx, fovy, sensor_data=None, sensor_data_2=None, meshroom=False):
         if meshroom is True:
             data_path = os.path.dirname(os.path.dirname(self.cloud.path))
             data = pd.read_csv(os.path.join(data_path, 'sensordata.csv'), header=None)
@@ -205,7 +205,8 @@ class Compare:
             plotter.show()
         else:
             points_first = self.calculate_bound_points(sensor_data, fovx, fovy)
-            # points_last = self.calculate_bound_points(sensor_data_last, fovx, fovy)
+            if sensor_data_2 is not None:
+                points_last = self.calculate_bound_points(sensor_data_2, fovx, fovy)
 
             topo = self.dem.tif_to_mesh()
             x_dist = self.cloud.cloud.bounds[1] - self.cloud.cloud.bounds[0]
@@ -220,7 +221,8 @@ class Compare:
             plotter.add_mesh(clipped)
             plotter.add_mesh(self.cloud.cloud)
             plotter.add_points(points_first, label='image_1')
-            # plotter.add_points(points_last, color='red', label='image_3')
+            if sensor_data_2 is not None:
+                plotter.add_points(points_last, color='red', label='image_2')
             plotter.add_legend(bcolor='w', face=None, size=(0.1, 0.1))
             plotter.show()
 
