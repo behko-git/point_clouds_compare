@@ -175,7 +175,7 @@ class Compare:
 
         return points
 
-        def plot_bound(self, fovx, fovy, sensor_data=None, sensor_data_2=None, meshroom=False):
+    def plot_bound(self, fovx, fovy, sensor_data=None, sensor_data_2=None, meshroom=False):
         if meshroom is True:
             data_path = os.path.dirname(os.path.dirname(self.cloud.path))
             data = pd.read_csv(os.path.join(data_path, 'sensordata.csv'), header=None)
