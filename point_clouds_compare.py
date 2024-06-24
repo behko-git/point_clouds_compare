@@ -180,12 +180,16 @@ class Compare:
             data_path = os.path.dirname(os.path.dirname(self.cloud.path))
             data = pd.read_csv(os.path.join(data_path, 'sensordata.csv'), header=None)
 
+            sensor_data_list = []
             sensor_data_first = {'lat': data.iloc[0][1], 'long': data.iloc[0][2], 'altimeter': data.iloc[0][3], 'yaw': data.iloc[0][7]}
-            sensor_data_2 = {'lat': data.iloc[1][1], 'long': data.iloc[1][2], 'altimeter': data.iloc[1][3], 'yaw': data.iloc[1][7]}
+            for i in range(1, len(data)-1):
+                sensor_data_list.append({'lat': data.iloc[i][1], 'long': data.iloc[i][2], 'altimeter': data.iloc[i][3], 'yaw': data.iloc[i][7]})
             sensor_data_last = {'lat': data.iloc[-1][1], 'long': data.iloc[-1][2], 'altimeter': data.iloc[-1][3], 'yaw': data.iloc[-1][7]}
 
+            points_list = []
             points_first = self.calculate_bound_points(sensor_data_first, fovx, fovy)
-            points_2 = self.calculate_bound_points(sensor_data_2, fovx, fovy)
+            for i in range(len(sensor_data_list)):
+                points_list.append(self.calculate_bound_points(sensor_data_list[i], fovx, fovy))
             points_last = self.calculate_bound_points(sensor_data_last, fovx, fovy)
 
             topo = self.dem.tif_to_mesh()
@@ -198,9 +202,10 @@ class Compare:
             plotter = pv.Plotter()
             plotter.add_mesh(clipped)
             plotter.add_mesh(self.cloud.cloud)
+            for i in range(len(points_list)):
+                plotter.add_points(points_list[i], color='yellow', label=f'image_{i+2}')
             plotter.add_points(points_first, label='image_1')
-            plotter.add_points(points_2, color='yellow', label='image_2')
-            plotter.add_points(points_last, color='red', label='image_3')
+            plotter.add_points(points_last, color='red', label=f'image_{len(data)}')
             plotter.add_legend(bcolor='w', face=None, size=(0.1, 0.1))
             plotter.show()
         else:
